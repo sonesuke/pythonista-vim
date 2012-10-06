@@ -15,13 +15,25 @@ let g:loaded_pythonista = 1
 
 
 " Code {{{1
-command! -nargs=0 RemoveLastBlankLines exec("py remove_last_blank_lines()")
+command! -nargs=0 RemoveUnwantedSpaces exec("py remove_unwanted_spaces()")
 " }}}1
 
 " let &cpo = s:cpo_save
 
 :python <<EOF
 import vim
+import re
+
+def remove_unwanted_spaces():
+    remove_unwanted_spaces_in_a_line()
+    remove_last_blank_lines()
+
+
+def remove_unwanted_spaces_in_a_line():
+    cb = vim.current.buffer
+    for i in range(len(cb)):
+	cb[i] = re.sub('\s*$', '', cb[i])
+
 
 def remove_last_blank_lines():
     cb = vim.current.buffer
