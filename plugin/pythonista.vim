@@ -27,6 +27,7 @@ import re
 def remove_unwanted_spaces():
     remove_unwanted_spaces_in_a_line()
     remove_last_blank_lines()
+    append_two_blank_lines_before_class()
 
 
 def remove_unwanted_spaces_in_a_line():
@@ -41,6 +42,27 @@ def remove_last_blank_lines():
 	if cb[i] != "":
 	    break
 	del cb[i]
+
+
+def append_two_blank_lines_before_class():
+    cb = vim.current.buffer
+    blank_lines = 0
+    i = 0
+    while i < len(cb):
+	if re.search('class.+:', cb[i]) and blank_lines != 2:
+	    diff = 2 - blank_lines
+	    if diff > 0:
+		cb.append([""] * diff, i)
+		i += diff
+	    else:
+		for n in range(-diff):
+		    del cb[i+diff]
+		i += diff
+	if cb[i] == "":
+	    blank_lines += 1
+	else:
+	    blank_lines = 0
+	i += 1
 
 EOF
 " vim:set ft=vim ts=8 sw=4 sts=4:
